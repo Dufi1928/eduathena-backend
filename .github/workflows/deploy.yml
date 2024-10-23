@@ -63,13 +63,16 @@ jobs:
           target: "/home/ivan/deployments/backend"
           port: 2222
 
+      -   name: Check if .env exists
+          run: ls -la
+
       - name: Copy .env file to server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          source: ".env"
+          source: "./.env"
           target: "/home/ivan/deployments/backend/.env"
           port: 2222
 
