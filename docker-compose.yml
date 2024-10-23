@@ -30,11 +30,9 @@ services:
       - ./static:/static  # Assurez-vous que les fichiers statiques sont générés et présents ici
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.web.rule=Host(`panelart.fun`)"
-      - "traefik.http.routers.web.entrypoints=websecure"
-      - "traefik.http.routers.web.tls.certresolver=myresolver"
-    ports:
-      - "80:80"
+      - "traefik.http.routers.nginx.rule=Host(`panelart.fun`)"
+      - "traefik.http.routers.nginx.entrypoints=websecure"
+      - "traefik.http.routers.nginx.tls.certresolver=myresolver"
     depends_on:
       - web
     networks:
@@ -52,6 +50,11 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=${DB_HOST}  # Utiliser les informations de la base de données déjà déployée
       - DB_PORT=${DB_PORT}  # Port de connexion à la base de données
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=Host(`api.panelart.fun`)"  # Sous-domaine pour le backend
+      - "traefik.http.routers.web.entrypoints=websecure"
+      - "traefik.http.routers.web.tls.certresolver=myresolver"
     networks:
       - web
     deploy:
