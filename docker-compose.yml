@@ -14,14 +14,18 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"  # Interface Traefik
+      - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./letsencrypt:/letsencrypt
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=Host(`api.eduathena.com`)"
+      - "traefik.http.routers.web.entrypoints=websecure"
+      - "traefik.http.routers.web.tls.certresolver=myresolver"
     networks:
       - web
-    deploy:
-      replicas: 1
+
 
   nginx:
     image: nginx:alpine
@@ -48,8 +52,8 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-      - DB_HOST=${DB_HOST}  # Utiliser les informations de la base de données déjà déployée
-      - DB_PORT=${DB_PORT}  # Port de connexion à la base de données
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.web.rule=Host(`api.eduathena.com`)"  # Sous-domaine pour le backend
