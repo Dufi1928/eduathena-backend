@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-z53of)p#jsge2uwe=pr9+c#=&&d(j#z^4o#qz66%ee=gft8&4-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['back.eduathena.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
