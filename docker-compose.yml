@@ -20,12 +20,11 @@ services:
       - ./letsencrypt:/letsencrypt
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.web.rule=Host(`api.eduathena.com`)"
-      - "traefik.http.routers.web.entrypoints=websecure"
-      - "traefik.http.routers.web.tls.certresolver=myresolver"
+      - "traefik.http.routers.traefik.rule=Host(`api.eduathena.com`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls.certresolver=myresolver"
     networks:
       - web
-
 
   nginx:
     image: nginx:alpine
@@ -56,9 +55,9 @@ services:
       - DB_PORT=${DB_PORT}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.web.rule=Host(`api.eduathena.com`)"  # Sous-domaine pour le backend
-      - "traefik.http.routers.web.entrypoints=websecure"
-      - "traefik.http.routers.web.tls.certresolver=myresolver"
+      - "traefik.http.routers.web_backend.rule=Host(`api.eduathena.com`)"  # Sous-domaine pour le backend
+      - "traefik.http.routers.web_backend.entrypoints=websecure"
+      - "traefik.http.routers.web_backend.tls.certresolver=myresolver"
     networks:
       - web
     deploy:
