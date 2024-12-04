@@ -17,16 +17,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Generate .env file
-        run: |
-          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
-          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
-          echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
-          echo "TWILIO_ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }}" >> .env
-          echo "TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }}" >> .env
-          echo "TWILIO_PHONE_NUMBER=${{ secrets.TWILIO_PHONE_NUMBER }}" >> .env
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -46,6 +36,9 @@ jobs:
             --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
             --build-arg DB_HOST=${{ secrets.DB_HOST }} \
             --build-arg DB_PORT=${{ secrets.DB_PORT }}
+            --build-arg TWILIO_ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }}
+            --build-arg TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }}
+            --build-arg TWILIO_PHONE_NUMBER=${{ secrets.TWILIO_PHONE_NUMBER }}
 
       - name: Docker Login
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
@@ -87,6 +80,9 @@ jobs:
               echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> /home/ivan/deployments/backend/.env
               echo "DB_HOST=${{ secrets.HOST }}" >> /home/ivan/deployments/backend/.env
               echo "DB_PORT=${{ secrets.DB_PORT }}" >> /home/ivan/deployments/backend/.env
+              echo "TWILIO_ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }}" >> /home/ivan/deployments/backend/.env
+              echo "TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }}" >> /home/ivan/deployments/backend/.env
+              echo "TWILIO_PHONE_NUMBER=${{ secrets.TWILIO_PHONE_NUMBER }}" >> /home/ivan/deployments/backend/.env
       
 
       - name: Setup SSH for Deployment
