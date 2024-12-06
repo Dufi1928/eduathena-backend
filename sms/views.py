@@ -1,8 +1,11 @@
-from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from twilio.rest import Client
 from rest_framework import status
+from django.conf import settings
+from twilio.rest import Client
+
+
+
 
 class SendSMSView(APIView):
     def post(self, request):
@@ -10,18 +13,25 @@ class SendSMSView(APIView):
         message = request.data.get("message")
 
         if not phone_number or not message:
-            return Response({"error": "Numéro de téléphone et message requis."}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Initialisez le client Twilio
-        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+            return Response({"error": "Phone number and message are required."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            # Envoyez le SMS
-            client.messages.create(
-                body=message,
-                from_=settings.TWILIO_PHONE_NUMBER,
-                to=phone_number
-            )
-            return Response({"success": "Message envoyé avec succès."}, status=status.HTTP_200_OK)
+            send_sms(phone_number, message)
+            return Response({"success": "Message sent successfully."}, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"error": f"Failed to send SMS: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+def send_sms(phone_number, message):
+    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+    try:
+        client.messages.create(
+            body=message,
+            from_=settings.TWILIO_PHONE_NUMBER,
+            to=phone_number
+        )
+    except Exception as e:
+        raise Exception(f"Failed to send SMS: {str(e)}")
+
